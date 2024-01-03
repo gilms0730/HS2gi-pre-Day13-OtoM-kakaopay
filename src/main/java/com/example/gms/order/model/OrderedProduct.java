@@ -1,5 +1,6 @@
-package com.example.gms.product.model;
+package com.example.gms.order.model;
 
+import com.example.gms.product.model.Product;
 import lombok.*;
 
 import javax.persistence.*;
@@ -13,11 +14,11 @@ import javax.persistence.*;
 public class OrderedProduct {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Integer id;
-    @ManyToOne (fetch = FetchType.EAGER)
+    private Long id;
+    @ManyToOne (fetch = FetchType.LAZY)
     @JoinColumn(name="Order_id")
     Order order;
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="Product_id")
     Product product;
 

@@ -1,8 +1,10 @@
 package com.example.gms.product.service;
-import com.example.gms.product.model.PaymentProducts;
+import com.example.gms.order.model.PaymentProducts;
 import com.example.gms.product.model.Product;
+import com.example.gms.product.model.dto.ProductCreateReq;
+import com.example.gms.product.model.dto.ProductReadRes;
+import com.example.gms.product.model.dto.ProductUpdateReq;
 import com.example.gms.product.repository.ProductRepository;
-import com.siot.IamportRestClient.response.Payment;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -17,47 +19,58 @@ public class ProductService {
         this.productRepository = productRepository;
     }
 
-    public void uploadProduct(String name, Integer price){
+    public void uploadProduct(ProductCreateReq productCreateReq){
         productRepository.save(Product.builder()
-                .name(name)
-                .price(price)
-                .build());
+                        .name(productCreateReq.getName())
+                        .price(productCreateReq.getPrice())
+                        .build());
     }
 
-    public List<Product> list() {
+    public List<ProductReadRes> list() {
         List<Product> result = productRepository.findAll();
-        return result;
+        List<ProductReadRes> productReadResList = new ArrayList<>();
+        for (Product product : result) {
+            ProductReadRes productReadRes = ProductReadRes.builder()
+                    .id(product.getId())
+                    .name(product.getName())
+                    .price(product.getPrice())
+                    .build();
+            productReadResList.add(productReadRes);
+        }
+        return productReadResList;
     }
 
-    public Product read(Integer id) {
+    public ProductReadRes read(Long id) {
         Optional<Product> result = productRepository.findById(id);
         if (result.isPresent()) {
             Product product = result.get();
 
-            return Product.builder()
+            return ProductReadRes.builder()
                     .id(product.getId())
                     .price(product.getPrice())
                     .name(product.getName())
                     .build();
-        } else {
-            return null;
+        }
+        return null;
+    }
+    public void update(ProductUpdateReq productUpdateReq) {
+        Optional<Product> result = productRepository.findById(productUpdateReq.getId());
+        if(result.isPresent()) {
+            Product product = result.get();
+            product.setName(productUpdateReq.getName());
+            product.setPrice(productUpdateReq.getPrice());
+
+            productRepository.save(product);
         }
     }
-    public void update(Product product) {
-        productRepository.save(Product.builder()
-                .id(product.getId())
-                .name(product.getName())
-                .price(product.getPrice())
-                .build());
-    }
 
-    public void delete(Integer id) {
+    public void delete(Long id) {
         productRepository.delete(Product.builder().id(id).build());
     }
 
     public Integer getTotalPrice(PaymentProducts datas){
 
-        List<Integer> productIds = new ArrayList<>();
+        List<Long> productIds = new ArrayList<>();
         for (Product product: datas.getProducts()) {
             productIds.add(product.getId());
         }

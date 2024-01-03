@@ -1,12 +1,11 @@
-package com.example.gms.product.controller;
+package com.example.gms.order.controller;
 
-import com.example.gms.product.service.OrderService;
+import com.example.gms.order.service.OrderService;
 import com.example.gms.product.service.ProductService;
-import com.siot.IamportRestClient.response.IamportResponse;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -19,7 +18,11 @@ public class OrderController {
         this.productService = productService;
         this.orderService = orderService;
     }
-    @RequestMapping("/validation")
+    @RequestMapping(method = RequestMethod.GET, value = "/order/list")
+    public ResponseEntity list() {
+        return ResponseEntity.ok().body(orderService.list());
+    }
+    @RequestMapping(method = RequestMethod.GET, value = "/validation")
     public ResponseEntity validation (String impUid){
         try {
             if (orderService.paymentValidation(impUid))

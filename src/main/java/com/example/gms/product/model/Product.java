@@ -1,9 +1,9 @@
 package com.example.gms.product.model;
 
+import com.example.gms.order.model.OrderedProduct;
 import lombok.*;
 
 import javax.persistence.*;
-import java.lang.reflect.Member;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,10 +16,10 @@ import java.util.List;
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Integer id;
+    Long id;
     String name;
     Integer price;
 
-    @OneToMany(mappedBy = "product")
+    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
     private List<OrderedProduct> orderedProductList = new ArrayList<>();
 }

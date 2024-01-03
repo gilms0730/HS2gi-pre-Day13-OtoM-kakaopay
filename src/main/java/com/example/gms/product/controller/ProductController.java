@@ -1,6 +1,7 @@
 package com.example.gms.product.controller;
 
-import com.example.gms.product.model.Product;
+import com.example.gms.product.model.dto.ProductCreateReq;
+import com.example.gms.product.model.dto.ProductUpdateReq;
 import com.example.gms.product.service.ProductService;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.net.ssl.HttpsURLConnection;
+import javax.servlet.http.HttpServletRequest;
 import java.io.*;
 import java.net.URL;
 import java.util.HashMap;
@@ -22,36 +24,31 @@ public class ProductController {
         this.productService = productService;
     }
     private ProductService productService;
-    @RequestMapping(method = RequestMethod.POST, value = "/buy")
-    public ResponseEntity buyProduct (String name, Integer price){
-
-        return ResponseEntity.ok().body("결제 완료");
-    }
 
     @RequestMapping(method = RequestMethod.POST, value = "/upload")
-    public ResponseEntity uploadProduct (String name, Integer price){
-        productService.uploadProduct(name, price);
+    public ResponseEntity uploadProduct (ProductCreateReq productCreateReq){
+        productService.uploadProduct(productCreateReq);
         return ResponseEntity.ok().body("상품 등록 완료");
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/list")
-    public  ResponseEntity listProduct (String name, Integer price){
+    public  ResponseEntity listProduct (HttpServletRequest request){
         return ResponseEntity.ok().body(productService.list());
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/read")
-    public ResponseEntity readProduct(Integer id) {
+    public ResponseEntity readProduct(Long id) {
         return ResponseEntity.ok().body(productService.read(id));
     }
 
     @RequestMapping(method = RequestMethod.PATCH, value = "/update")
-    public ResponseEntity updateProduct(Product product){
-        productService.update(product);
+    public ResponseEntity updateProduct(ProductUpdateReq productUpdateReq){
+        productService.update(productUpdateReq);
         return ResponseEntity.ok().body("수정 완료");
     }
 
     @RequestMapping(method = RequestMethod.DELETE, value = "/delete")
-    public ResponseEntity deleteProduct(Integer id) {
+    public ResponseEntity deleteProduct(Long id) {
         productService.delete(id);
         return ResponseEntity.ok().body("삭제");
 

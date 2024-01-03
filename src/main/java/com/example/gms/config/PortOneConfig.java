@@ -1,4 +1,4 @@
-package com.example.gms.product.config;
+package com.example.gms.config;
 
 import com.siot.IamportRestClient.IamportClient;
 import org.springframework.beans.factory.annotation.Value;

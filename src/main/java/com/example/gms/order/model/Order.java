@@ -1,5 +1,6 @@
-package com.example.gms.product.model;
+package com.example.gms.order.model;
 
+import com.example.gms.user.model.User;
 import lombok.*;
 
 import javax.persistence.*;
@@ -15,7 +16,7 @@ import java.util.List;
 public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Integer id;
+    Long id;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="User_id")
@@ -23,6 +24,6 @@ public class Order {
 
     String impUid;
 
-    @OneToMany(mappedBy = "order")
+    @OneToMany(mappedBy = "order", fetch = FetchType.LAZY)
     private List<OrderedProduct> orderedProductList= new ArrayList<>();
 }
